@@ -48,10 +48,10 @@ export default function Footer() {
                 Best Sellers
               </li>
               <li className="hover:text-white cursor-pointer transition">
-                New Arrivals
+                 <Link href={"/new-arrivals"}>New Arrivals</Link>
               </li>
               <li className="hover:text-white cursor-pointer transition">
-                Bulk Orders
+                <Link href={"/bulk-order-enquiry"}>Bulk Orders</Link>
               </li>
             </ul>
           </div>
@@ -81,22 +81,22 @@ export default function Footer() {
             </h3>
             <ul className="space-y-3 text-sm text-white/70">
               <li className="hover:text-white cursor-pointer transition">
-                About Us
+                <Link href={"/about-us"}>About Us</Link>
               </li>
               <li  className="hover:text-white cursor-pointer transition">
                 <Link href="/blog">Blogs</Link>
               </li>
               <li className="hover:text-white cursor-pointer transition">
-                Careers
+                <Link href={"/career"}>Careers</Link>
               </li>
               <li className="hover:text-white cursor-pointer transition">
                 <Link href={"/contact-us"}>Contact Us</Link>
               </li>
               <li className="hover:text-white cursor-pointer transition">
-                FAQ's
+                <Link href={"/faqs"}>FAQ's</Link>
               </li>
               <li className="hover:text-white cursor-pointer transition">
-                Testimonial
+                <Link href={"/testimonials"}>Testimonial</Link>
               </li>
             </ul>
           </div>

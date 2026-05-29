@@ -1,5 +1,5 @@
 "use client";
- 
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -7,28 +7,25 @@ import React, { useState, useRef } from 'react';
 import ReactCountryFlag from 'react-country-flag';
 import { IoIosArrowDown } from "react-icons/io";
 import { VscEye, VscEyeClosed } from 'react-icons/vsc';
- 
+
 export default function Signin() {
-    const [step, setStep] = useState('signin'); // 'signin' ya 'otp' control karne ke liye
+    const [step, setStep] = useState('signin');
     const [showPassword, setShowPassword] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState('');
     const [password, setPassword] = useState('');
     const router = useRouter();
- 
-    // OTP के लिए स्टेट (4 डिजिट)
+
     const [otp, setOtp] = useState(['', '', '', '']);
     const inputRefs = useRef([]);
- 
-    // Country Selector State
+
     const [selectedCountry, setSelectedCountry] = useState({
         code: "+91",
-        countryCode: "IN",   // ISO Code for flag
+        countryCode: "IN",
         name: "India"
     });
- 
+
     const [showCountryDropdown, setShowCountryDropdown] = useState(false);
- 
-    // Countries List
+
     const countries = [
         { code: "+91", countryCode: "IN", name: "India" },
         { code: "+1", countryCode: "US", name: "United States" },
@@ -40,34 +37,69 @@ export default function Signin() {
         { code: "+880", countryCode: "BD", name: "Bangladesh" },
         { code: "+49", countryCode: "DE", name: "Germany" },
     ];
- 
+
     const handleCountrySelect = (country) => {
         setSelectedCountry(country);
         setShowCountryDropdown(false);
     };
- 
+
     const handleOtpChange = (element, index) => {
         if (isNaN(element.value)) return false;
- 
+
         const newOtp = [...otp];
         newOtp[index] = element.value;
         setOtp(newOtp);
- 
+
         if (element.value !== '' && index < 3) {
             inputRefs.current[index + 1].focus();
         }
     };
- 
+
     const handleOtpKeyDown = (e, index) => {
         if (e.key === 'Backspace' && !otp[index] && index > 0) {
             inputRefs.current[index - 1].focus();
         }
     };
- 
+
+    // LOGIN VALIDATION
+    const handleLogin = () => {
+        if (!phoneNumber.trim()) {
+            alert("Please enter phone number");
+            return;
+        }
+
+        if (!password.trim()) {
+            alert("Please enter password");
+            return;
+        }
+
+        setStep("otp");
+    };
+
+    // OTP VERIFY + LOCAL STORAGE SAVE
+    const handleVerifyOtp = () => {
+        const enteredOtp = otp.join("");
+
+        if (enteredOtp.length !== 4) {
+            alert("Please enter complete OTP");
+            return;
+        }
+
+        const userData = {
+            phone: phoneNumber,
+            password: password,
+            isLoggedIn: true,
+        };
+
+        localStorage.setItem("user", JSON.stringify(userData));
+
+        router.push("/");
+    };
+
     return (
         <div className="min-h-screen flex items-center justify-center px-4 py-12">
             <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8">
- 
+
                 {/* Logo */}
                 <div className="flex justify-center mb-8">
                     <Image
@@ -80,31 +112,31 @@ export default function Signin() {
                         className="w-50 h-auto object-contain"
                     />
                 </div>
- 
-                {/* STEP 1: SIGN IN FORM */}
+
                 {step === 'signin' && (
                     <>
-                        {/* Sign In Heading */}
-                        <h2 className="text-2xl font-semibold text-[#353A39] mb-3">Sign IN</h2>
- 
-                        {/* Form */}
+                        <h2 className="text-2xl font-semibold text-[#353A39] mb-3">
+                            Sign IN
+                        </h2>
+
                         <form className="space-y-6">
-                            {/* Phone Number with Country Selector */}
+
+                            {/* Phone Number */}
                             <div>
-                                <label className="block text-sm font-bold text-[#020907] mb-1">Phone number</label>
- 
+                                <label className="block text-sm font-bold text-[#020907] mb-1">
+                                    Phone number
+                                </label>
+
                                 <div className="relative">
                                     <div className="flex border border-[#DFDFDF] rounded-lg overflow-hidden">
- 
-                                        {/* Country Code Selector */}
+
+                                        {/* Country Selector */}
                                         <div
                                             className="flex items-center px-2 py-3 hover:bg-gray-100 transition-colors min-w-[60px] cursor-pointer relative"
                                             onClick={() => setShowCountryDropdown(!showCountryDropdown)}
                                         >
-                                            {/* Small Divider Line */}
                                             <div className="absolute right-0 h-5 w-[1px] bg-[#DFDFDF]"></div>
- 
-                                            {/* Rounded Flag */}
+
                                             <div className="w-5 h-5 rounded-full overflow-hidden flex items-center justify-center">
                                                 <ReactCountryFlag
                                                     countryCode={selectedCountry.countryCode}
@@ -117,11 +149,10 @@ export default function Signin() {
                                                     title={selectedCountry.name}
                                                 />
                                             </div>
- 
+
                                             <IoIosArrowDown className="ml-auto text-[#020907] font-bold text-md" />
                                         </div>
- 
-                                        {/* Phone Input */}
+
                                         <input
                                             type="tel"
                                             value={phoneNumber}
@@ -130,8 +161,8 @@ export default function Signin() {
                                             className="flex-1 px-4 py-2 outline-none text-gray-700 placeholder:text-[#353A39]"
                                         />
                                     </div>
- 
-                                    {/* Country Dropdown */}
+
+                                    {/* Dropdown */}
                                     {showCountryDropdown && (
                                         <div className="absolute z-50 mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg py-2 max-h-72 overflow-auto">
                                             {countries.map((country, index) => (
@@ -149,20 +180,27 @@ export default function Signin() {
                                                             borderRadius: "4px",
                                                         }}
                                                     />
- 
-                                                    <span className="font-medium w-12">{country.code}</span>
- 
-                                                    <span className="text-gray-600">{country.name}</span>
+
+                                                    <span className="font-medium w-12">
+                                                        {country.code}
+                                                    </span>
+
+                                                    <span className="text-gray-600">
+                                                        {country.name}
+                                                    </span>
                                                 </div>
                                             ))}
                                         </div>
                                     )}
                                 </div>
                             </div>
- 
+
                             {/* Password */}
                             <div>
-                                <label className="block text-sm font-bold text-[#020907] mb-1">Password</label>
+                                <label className="block text-sm font-bold text-[#020907] mb-1">
+                                    Password
+                                </label>
+
                                 <div className="relative border border-gray-300 rounded-lg">
                                     <input
                                         type={showPassword ? "text" : "password"}
@@ -171,7 +209,7 @@ export default function Signin() {
                                         placeholder="Enter password"
                                         className="w-full px-4 py-2 outline-none text-[#000000] placeholder:text-[#353A39] pr-12"
                                     />
- 
+
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
@@ -184,7 +222,7 @@ export default function Signin() {
                                         )}
                                     </button>
                                 </div>
-                                {/* Forgot Password */}
+
                                 <div className="flex justify-end mt-2">
                                     <Link
                                         href="/forget-password"
@@ -194,39 +232,47 @@ export default function Signin() {
                                     </Link>
                                 </div>
                             </div>
- 
-                            {/* Buttons */}
+
+                            {/* Login Button */}
                             <button
                                 type="button"
-                                onClick={() => setStep('otp')}
+                                onClick={handleLogin}
                                 className="w-full bg-[#0B2E24] transition-colors text-white font-bold py-3 rounded-xl text-sm"
                             >
                                 Login
                             </button>
- 
+
                             <button
                                 type="button"
-                                className="w-full border border-[#0B2E24]  transition-colors text-[#0B2E24] font-bold py-2 rounded-xl text-sm"
+                                className="w-full border border-[#0B2E24] transition-colors text-[#0B2E24] font-bold py-2 rounded-xl text-sm"
                             >
                                 Continue as guest
                             </button>
- 
+
                             <div className="text-center text-xs text-gray-600">
-                                Already have an account?{' '}
-                                <Link href="/signup" className="text-[#0B2E24] font-bold">
+                                Already have an account?{" "}
+                                <Link
+                                    href="/signup"
+                                    className="text-[#0B2E24] font-bold"
+                                >
                                     Sign up
                                 </Link>
                             </div>
                         </form>
                     </>
                 )}
- 
-                {/* STEP 2: OTP / MPIN DESIGN */}
+
+                {/* OTP STEP */}
                 {step === 'otp' && (
                     <div>
-                        <h2 className="text-2xl font-semibold text-[#353A39] mb-3">Verify your phone number</h2>
-                        <p className="text-xs text-[#353A39] mb-6 text-left">We have sent OTP on your email for verification.</p>
- 
+                        <h2 className="text-2xl font-semibold text-[#353A39] mb-3">
+                            Verify your phone number
+                        </h2>
+
+                        <p className="text-xs text-[#353A39] mb-6 text-left">
+                            We have sent OTP on your email for verification.
+                        </p>
+
                         <div className="flex justify-start gap-2 mb-4">
                             {otp.map((data, index) => (
                                 <input
@@ -242,9 +288,12 @@ export default function Signin() {
                                 />
                             ))}
                         </div>
- 
+
                         <div className="mb-6">
-                            <p className="text-sm text-[#4E5251]">Didn't receive an OTP?</p>
+                            <p className="text-sm text-[#4E5251]">
+                                Didn't receive an OTP?
+                            </p>
+
                             <button
                                 type="button"
                                 className="text-sm text-[#6549E0] font-bold hover:underline mt-0.5"
@@ -252,19 +301,18 @@ export default function Signin() {
                                 Resend in 0:30s
                             </button>
                         </div>
- 
+
+                        {/* VERIFY BUTTON */}
                         <button
                             type="button"
-                            onClick={() => router.push("/")}
+                            onClick={handleVerifyOtp}
                             className="w-full bg-[#0B2E24] hover:bg-[#051712] transition-colors text-white font-bold py-3 rounded-lg text-sm mb-4"
                         >
                             Next
                         </button>
                     </div>
                 )}
- 
             </div>
         </div>
     );
 }
- 

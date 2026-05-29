@@ -28,10 +28,10 @@ export default function ContactUsPage() {
  
   // Dummy Images Slider के लिए
   const sliderImages = [
-    "/images/gift-shop-1.png", // अपनी इमेज का सही पाथ दें
-    "/images/gift-shop-1.png",
-    "/images/gift-shop-1.png",
-    "/images/gift-shop-1.png",
+    "/images/about-img.png", // अपनी इमेज का सही पाथ दें
+    "/images/about-img.png",
+    "/images/about-img.png",
+    "/images/about-img.png",
   ];
  
   return (

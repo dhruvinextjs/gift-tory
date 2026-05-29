@@ -182,9 +182,9 @@ export default function Blog() {
        
         <>
           {/* Header Banner Section */}
-          <div className="w-full relative h-[250px] md:h-[350px] overflow-hidden">
+          <div className="w-full relative h-[250px] md:h-[520px] overflow-hidden">
             <Image
-              src="/images/header-bg.png"
+              src="/images/blog-bg.png"
               alt="Blogs Header Background"
               fill
               priority
