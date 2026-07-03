@@ -73,8 +73,6 @@ export default function PaymentPage() {
               );
             })}
           </div>
-
-          {/* Conditional Rendering Form based on Card selection */}
           {/* Conditional Rendering based on selected payment method */}
           {activeMethod === "card" ? (
             <form
@@ -255,9 +253,6 @@ export default function PaymentPage() {
               </div>
             </div>
           ) : activeMethod === "wallet" ? (
-            /* =========================
-      WALLET UI
-  ========================= */
             <div className="animate-fadeIn">
               <div className="bg-[#F8F8F8] rounded-xl border border-[#EFEFEF] px-4 py-6 flex flex-col items-center">
                 {/* WALLET LOGOS */}
